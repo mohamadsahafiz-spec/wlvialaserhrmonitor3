@@ -244,7 +244,14 @@ function getEvalTime() {
 async function initApp() {
     initDOM();
     AppState.machines = await StorageService.loadMachinesAsync();
-    AppState.settings = StorageService.loadSettings();
+    AppState.settings = await StorageService.loadSettingsAsync();
+
+    StorageService.initBackgroundSync((updatedMachines) => {
+        AppState.machines = updatedMachines;
+        if (!window.location.pathname.includes('machine.html') && !window.location.pathname.includes('settings.html')) {
+            showFleetView();
+        }
+    });
 
     UI.applyTheme(AppState.settings.theme);
     updateModeBadgeUI();

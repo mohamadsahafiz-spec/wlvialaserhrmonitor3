@@ -6,6 +6,28 @@ import { dateOffset } from './utils.js';
 const STORAGE_KEY = 'wafer_driller_fleet_v5';
 const SETTINGS_KEY = 'wafer_driller_settings_v5';
 
+// Feature Flag for Multi-Device Cloud Sync
+export const CLOUD_SYNC_ENABLED = false;
+
+let currentSyncStatus = CLOUD_SYNC_ENABLED ? 'SYNCING' : 'LOCAL';
+let syncTimer = null;
+let lastMachinesHash = '';
+
+function getMachinesHash(machines) {
+    try {
+        return JSON.stringify(machines.map(m => ({ id: m.id, lu: m.lastUpdated, len: m.lasers ? m.lasers.length : 0 })));
+    } catch(e) {
+        return '';
+    }
+}
+
+function updateSyncStatus(status) {
+    currentSyncStatus = status;
+    if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('lms-sync-status-changed', { detail: { status } }));
+    }
+}
+
 function getFallbackMachines() {
     return [
         {
@@ -433,10 +455,128 @@ export const StorageService = {
             this.saveSettings(settings);
         }
 
+        if (CLOUD_SYNC_ENABLED) {
+            fetch('/api/sync/upload-local', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ machines: normalizedMachines, settings: settings || this.loadSettings() })
+            }).catch(err => console.warn('[StorageService] Backup sync error:', err));
+        }
+
         return {
             machines: normalizedMachines,
             settings: this.loadSettings()
         };
+    },
+
+    getSyncStatus() {
+        return currentSyncStatus;
+    },
+
+    async saveMachineAsync(machineData) {
+        const machines = this.saveMachine(machineData);
+        if (CLOUD_SYNC_ENABLED) {
+            try {
+                updateSyncStatus('SYNCING');
+                const res = await fetch('/api/machines', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(machineData)
+                });
+                if (res.ok) updateSyncStatus('SYNCED');
+                else updateSyncStatus('ERROR');
+            } catch (err) {
+                updateSyncStatus('OFFLINE');
+            }
+        }
+        return machines;
+    },
+
+    async deleteMachineAsync(id) {
+        const machines = this.deleteMachine(id);
+        if (CLOUD_SYNC_ENABLED) {
+            try {
+                updateSyncStatus('SYNCING');
+                const res = await fetch(`/api/machines/${id}`, { method: 'DELETE' });
+                if (res.ok) updateSyncStatus('SYNCED');
+                else updateSyncStatus('ERROR');
+            } catch (err) {
+                updateSyncStatus('OFFLINE');
+            }
+        }
+        return machines;
+    },
+
+    async loadSettingsAsync() {
+        if (!CLOUD_SYNC_ENABLED) return this.loadSettings();
+        try {
+            const res = await fetch('/api/settings');
+            if (res.ok) {
+                const remote = await res.json();
+                if (remote && Object.keys(remote).length > 0) {
+                    this.saveSettings(remote);
+                    return this.loadSettings();
+                }
+            }
+        } catch (err) {}
+        return this.loadSettings();
+    },
+
+    async saveSettingsAsync(settings) {
+        this.saveSettings(settings);
+        if (CLOUD_SYNC_ENABLED) {
+            try {
+                await fetch('/api/settings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(settings)
+                });
+            } catch (err) {}
+        }
+    },
+
+    initBackgroundSync(onUpdateCallback) {
+        if (!CLOUD_SYNC_ENABLED) return;
+
+        const checkRemoteChanges = async () => {
+            try {
+                const res = await fetch('/api/machines');
+                if (res.ok) {
+                    const remote = await res.json();
+                    const normalized = this.normalizeMachines(remote);
+                    const newHash = getMachinesHash(normalized);
+                    if (lastMachinesHash && newHash !== lastMachinesHash) {
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+                        lastMachinesHash = newHash;
+                        updateSyncStatus('SYNCED');
+                        if (typeof onUpdateCallback === 'function') {
+                            onUpdateCallback(normalized);
+                        }
+                        if (typeof window !== 'undefined') {
+                            window.dispatchEvent(new CustomEvent('lms-fleet-updated', { detail: { count: normalized.length } }));
+                        }
+                    } else {
+                        lastMachinesHash = newHash;
+                        updateSyncStatus('SYNCED');
+                    }
+                }
+            } catch (err) {
+                updateSyncStatus('OFFLINE');
+            }
+        };
+
+        if (!syncTimer) {
+            syncTimer = setInterval(checkRemoteChanges, 10000);
+        }
+
+        if (typeof window !== 'undefined') {
+            window.addEventListener('focus', checkRemoteChanges);
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible') {
+                    checkRemoteChanges();
+                }
+            });
+        }
     }
 };
 
