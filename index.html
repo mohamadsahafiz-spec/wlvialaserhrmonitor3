@@ -76,8 +76,8 @@
         <section id="view-fleet" class="fleet-view">
 
             <!-- Laser Beam Animation Band -->
-            <div id="lms-beam-container" style="position:relative; width:100%; height:75px; overflow:hidden; margin-bottom:16px; background:transparent;">
-                <svg id="lms-beam-svg" style="position:absolute; inset:0; width:100%; height:100%; display:block;">
+            <div id="lms-beam-container" style="position:relative; width:100%; height:75px; overflow:visible; margin-bottom:16px; background:transparent; pointer-events:none;">
+                <svg id="lms-beam-svg" style="position:absolute; left:0; width:100%; display:block; pointer-events:none;">
                     <defs id="lms-beam-defs">
                         <filter id="lms-blurGlow"><feGaussianBlur stdDeviation="6"/></filter>
                     </defs>
