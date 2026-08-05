@@ -12,10 +12,19 @@ export const CLOUD_SYNC_ENABLED = true;
 let currentSyncStatus = CLOUD_SYNC_ENABLED ? 'SYNCING' : 'LOCAL';
 let syncTimer = null;
 let lastMachinesHash = '';
+let lastSettingsHash = '';
 
 function getMachinesHash(machines) {
     try {
         return JSON.stringify(machines.map(m => ({ id: m.id, lu: m.lastUpdated, len: m.lasers ? m.lasers.length : 0 })));
+    } catch(e) {
+        return '';
+    }
+}
+
+function getSettingsHash(settings) {
+    try {
+        return JSON.stringify(settings || {});
     } catch(e) {
         return '';
     }
@@ -632,9 +641,13 @@ export const StorageService = {
 
         const checkRemoteChanges = async () => {
             try {
-                const res = await fetch('/api/machines');
-                if (res.ok) {
-                    const remote = await res.json();
+                const [mRes, sRes] = await Promise.all([
+                    fetch('/api/machines').catch(() => null),
+                    fetch('/api/settings').catch(() => null)
+                ]);
+
+                if (mRes && mRes.ok) {
+                    const remote = await mRes.json();
                     const normalized = this.normalizeMachines(remote);
                     const newHash = getMachinesHash(normalized);
                     if (lastMachinesHash && newHash !== lastMachinesHash) {
@@ -650,6 +663,23 @@ export const StorageService = {
                     } else {
                         lastMachinesHash = newHash;
                         updateSyncStatus('SYNCED');
+                    }
+                }
+
+                if (sRes && sRes.ok) {
+                    const remoteSettings = await sRes.json();
+                    if (remoteSettings && Object.keys(remoteSettings).length > 0) {
+                        const mergedSettings = { ...this.loadSettings(), ...remoteSettings };
+                        const newSHash = getSettingsHash(mergedSettings);
+                        if (lastSettingsHash && newSHash !== lastSettingsHash) {
+                            localStorage.setItem(SETTINGS_KEY, JSON.stringify(mergedSettings));
+                            lastSettingsHash = newSHash;
+                            if (typeof window !== 'undefined') {
+                                window.dispatchEvent(new CustomEvent('lms-settings-updated', { detail: mergedSettings }));
+                            }
+                        } else {
+                            lastSettingsHash = newSHash;
+                        }
                     }
                 }
             } catch (err) {

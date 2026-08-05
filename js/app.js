@@ -200,7 +200,17 @@ function initDOM() {
         btnCloseModeModal: document.getElementById('btn-close-mode-modal'),
         modePasswordError: document.getElementById('mode-password-error'),
 
+        // Header & Application Title Elements
+        appHeaderTitle: document.getElementById('app-header-title'),
+
         // Settings & Fleet Backup Controls
+        cfgAppTitle: document.getElementById('cfg-app-title'),
+        cfgRatedLife: document.getElementById('cfg-rated-life'),
+        cfgWarnPct: document.getElementById('cfg-warn-pct'),
+        cfgRecalInterval: document.getElementById('cfg-recal-interval'),
+        cfgEngPassword: document.getElementById('cfg-eng-password'),
+        btnSaveSettings: document.getElementById('btn-save-settings'),
+        btnResetDefaults: document.getElementById('btn-reset-defaults'),
         btnExportJson: document.getElementById('btn-export-json'),
         inputImportJson: document.getElementById('input-import-json')
     };
@@ -241,10 +251,33 @@ function getEvalTime() {
     return getCurrentEvalTime(simDateStr);
 }
 
+function updateAppTitle(title) {
+    const finalTitle = title || (AppState.settings && AppState.settings.systemTitle) || "Laser Management System";
+    if (DOM.appHeaderTitle) {
+        DOM.appHeaderTitle.textContent = finalTitle;
+    } else {
+        const h1 = document.getElementById('app-header-title');
+        if (h1) h1.textContent = finalTitle;
+    }
+    document.title = finalTitle;
+}
+
+function populateSettingsForm() {
+    if (!AppState.settings) return;
+    if (DOM.cfgAppTitle) DOM.cfgAppTitle.value = AppState.settings.systemTitle || "Laser Management System";
+    if (DOM.cfgRatedLife) DOM.cfgRatedLife.value = AppState.settings.defaultRatedLife || 25000;
+    if (DOM.cfgWarnPct) DOM.cfgWarnPct.value = AppState.settings.defaultWarningPercentage || 80;
+    if (DOM.cfgRecalInterval) DOM.cfgRecalInterval.value = AppState.settings.recalibrationInterval || 30;
+    if (DOM.cfgEngPassword) DOM.cfgEngPassword.value = AppState.settings.engineerPassword || "1234";
+}
+
 async function initApp() {
     initDOM();
     AppState.machines = await StorageService.loadMachinesAsync();
     AppState.settings = await StorageService.loadSettingsAsync();
+
+    updateAppTitle();
+    populateSettingsForm();
 
     StorageService.initBackgroundSync((updatedMachines) => {
         AppState.machines = updatedMachines;
@@ -637,6 +670,8 @@ function showSettingsView() {
 
     if (DOM.navSettings) DOM.navSettings.classList.add('active');
     if (DOM.navFleet) DOM.navFleet.classList.remove('active');
+
+    populateSettingsForm();
 }
 
 function setupEventListeners() {
@@ -690,31 +725,27 @@ function setupEventListeners() {
             }
         });
     }
-   
-   if (DOM.btnSubmitModeAuth) {
-       DOM.btnSubmitModeAuth.addEventListener('click', () => {
-           const entered = DOM.inputModePassword ? DOM.inputModePassword.value : '';
-           const correct = AppState.settings.engineerPassword || '1234';
-   
-           if (entered === String(correct)) {
-               AppState.settings.accessMode = 'ENGINEER';
-               StorageService.saveSettings(AppState.settings);
-               updateModeBadgeUI();
-               UI.hideModal(DOM.modeModalOverlay);
-               UI.showToast('Engineer Mode Unlocked!', 'success');
-   
-               if (pendingEngineerAction) {
-                   const cb = pendingEngineerAction;
-                   pendingEngineerAction = null;
-                   cb();
-               }
-           } else {
-               if (DOM.modePasswordError) {
-                   DOM.modePasswordError.style.display = 'block';
-               }
-           }
-       });
-   }
+
+    if (DOM.btnSubmitModeAuth) {
+        DOM.btnSubmitModeAuth.addEventListener('click', () => {
+            const entered = DOM.inputModePassword ? DOM.inputModePassword.value : '';
+            const correct = AppState.settings.engineerPassword || '1234';
+            if (entered === correct) {
+                AppState.settings.accessMode = 'ENGINEER';
+                StorageService.saveSettings(AppState.settings);
+                updateModeBadgeUI();
+                UI.hideModal(DOM.modeModalOverlay);
+                UI.showToast('Engineer Mode Unlocked!', 'success');
+                if (pendingEngineerAction) {
+                    const cb = pendingEngineerAction;
+                    pendingEngineerAction = null;
+                    cb();
+                }
+            } else {
+                if (DOM.modePasswordError) DOM.modePasswordError.style.display = 'block';
+            }
+        });
+    }
 
     const closeModeModal = () => {
         UI.hideModal(DOM.modeModalOverlay);
@@ -1239,6 +1270,8 @@ function setupEventListeners() {
 
                     UI.applyTheme(AppState.settings.theme);
                     updateModeBadgeUI();
+                    updateAppTitle();
+                    populateSettingsForm();
                     UI.showToast('Fleet Backup Restored Successfully ✓', 'success');
 
                     if (DOM.fleetGrid) {
@@ -1253,6 +1286,55 @@ function setupEventListeners() {
             e.target.value = '';
         });
     }
+
+    // Save & Restore Settings Buttons
+    if (DOM.btnSaveSettings) {
+        DOM.btnSaveSettings.addEventListener('click', async () => {
+            const newTitle = DOM.cfgAppTitle ? DOM.cfgAppTitle.value.trim() : '';
+            AppState.settings.systemTitle = newTitle || "Laser Management System";
+            if (DOM.cfgRatedLife && DOM.cfgRatedLife.value) {
+                AppState.settings.defaultRatedLife = Number(DOM.cfgRatedLife.value);
+            }
+            if (DOM.cfgWarnPct && DOM.cfgWarnPct.value) {
+                AppState.settings.defaultWarningPercentage = Number(DOM.cfgWarnPct.value);
+            }
+            if (DOM.cfgRecalInterval && DOM.cfgRecalInterval.value) {
+                AppState.settings.recalibrationInterval = Number(DOM.cfgRecalInterval.value);
+            }
+            if (DOM.cfgEngPassword) {
+                AppState.settings.engineerPassword = DOM.cfgEngPassword.value;
+            }
+
+            await StorageService.saveSettingsAsync(AppState.settings);
+            updateAppTitle();
+            UI.showToast('System settings saved successfully ✓', 'success');
+        });
+    }
+
+    if (DOM.btnResetDefaults) {
+        DOM.btnResetDefaults.addEventListener('click', async () => {
+            AppState.settings.systemTitle = "Laser Management System";
+            AppState.settings.defaultRatedLife = 25000;
+            AppState.settings.defaultWarningPercentage = 80;
+            AppState.settings.recalibrationInterval = 30;
+            AppState.settings.engineerPassword = "1234";
+
+            await StorageService.saveSettingsAsync(AppState.settings);
+            populateSettingsForm();
+            updateAppTitle();
+            UI.showToast('Settings restored to defaults', 'info');
+        });
+    }
+
+    window.addEventListener('lms-settings-updated', (e) => {
+        if (e.detail) {
+            AppState.settings = { ...AppState.settings, ...e.detail };
+            updateAppTitle();
+            UI.applyTheme(AppState.settings.theme);
+            updateModeBadgeUI();
+            populateSettingsForm();
+        }
+    });
 
     // Identity Mismatch Modal Handlers
     const closeIdentityModal = () => {
