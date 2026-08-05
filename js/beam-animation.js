@@ -8,19 +8,42 @@
 
         var W, H, minX, maxX, minY, maxY;
         var margin = 6;
+        var beams = [];
 
         function updateBounds() {
-            var rect = container.getBoundingClientRect();
-            W = rect.width || 1000;
-            H = rect.height || 75;
+            var containerRect = container.getBoundingClientRect();
+            if (!containerRect.width) return;
+
+            var header = document.querySelector('.app-header');
+            var statsPanel = document.getElementById('fleet-stats-panel');
+
+            var headerRect = header ? header.getBoundingClientRect() : null;
+            var statsRect = statsPanel ? statsPanel.getBoundingClientRect() : null;
+
+            var top = (headerRect && containerRect.top > headerRect.bottom) ? (headerRect.bottom - containerRect.top) : 0;
+            var bottom = (statsRect && statsRect.top > containerRect.top) ? (statsRect.top - containerRect.top) : containerRect.height;
+
+            W = containerRect.width || 1000;
+            H = Math.max(20, bottom - top);
+
+            svg.style.top = top + 'px';
+            svg.style.height = H + 'px';
             svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+
             minX = margin; maxX = Math.max(margin + 10, W - margin);
             minY = margin; maxY = Math.max(margin + 10, H - margin);
+
+            if (beams && beams.length) {
+                beams.forEach(function (b) {
+                    b.maxTailLen = Math.max(W, H) * 0.55;
+                    b.pos.x = Math.max(minX, Math.min(maxX, b.pos.x));
+                    b.pos.y = Math.max(minY, Math.min(maxY, b.pos.y));
+                });
+            }
         }
         updateBounds();
 
         var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        var beams = [];
 
         function getStatusColors(status) {
             if (status === 'ALARM') {
@@ -226,19 +249,8 @@
             }
         }
 
-        if (window.ResizeObserver) {
-            var ro = new ResizeObserver(function () {
-                updateBounds();
-                beams.forEach(function (b) {
-                    b.maxTailLen = Math.max(W, H) * 0.55;
-                    b.pos.x = Math.max(minX, Math.min(maxX, b.pos.x));
-                    b.pos.y = Math.max(minY, Math.min(maxY, b.pos.y));
-                });
-            });
-            ro.observe(container);
-        } else {
-            window.addEventListener('resize', updateBounds);
-        }
+        window.addEventListener('resize', updateBounds);
+        window.addEventListener('orientationchange', updateBounds);
 
         window.updateBeamCount = syncBeamCount;
         window.addEventListener('lms-fleet-updated', function () {
