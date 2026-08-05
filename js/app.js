@@ -690,27 +690,31 @@ function setupEventListeners() {
             }
         });
     }
-
-    if (DOM.btnSubmitModeAuth) {
-        DOM.btnSubmitModeAuth.addEventListener('click', () => {
-            const entered = DOM.inputModePassword ? DOM.inputModePassword.value : '';
-            const correct = AppState.settings.engineerPassword || '1234';
-            if (entered === correct) {
-                AppState.settings.accessMode = 'ENGINEER';
-                StorageService.saveSettings(AppState.settings);
-                updateModeBadgeUI();
-                UI.hideModal(DOM.modeModalOverlay);
-                UI.showToast('Engineer Mode Unlocked!', 'success');
-                if (pendingEngineerAction) {
-                    const cb = pendingEngineerAction;
-                    pendingEngineerAction = null;
-                    cb();
-                }
-            } else {
-                if (DOM.modePasswordError) DOM.modePasswordError.style.display = 'block';
-            }
-        });
-    }
+   
+   if (DOM.btnSubmitModeAuth) {
+       DOM.btnSubmitModeAuth.addEventListener('click', () => {
+           const entered = DOM.inputModePassword ? DOM.inputModePassword.value : '';
+           const correct = AppState.settings.engineerPassword || '1234';
+   
+           if (entered === String(correct)) {
+               AppState.settings.accessMode = 'ENGINEER';
+               StorageService.saveSettings(AppState.settings);
+               updateModeBadgeUI();
+               UI.hideModal(DOM.modeModalOverlay);
+               UI.showToast('Engineer Mode Unlocked!', 'success');
+   
+               if (pendingEngineerAction) {
+                   const cb = pendingEngineerAction;
+                   pendingEngineerAction = null;
+                   cb();
+               }
+           } else {
+               if (DOM.modePasswordError) {
+                   DOM.modePasswordError.style.display = 'block';
+               }
+           }
+       });
+   }
 
     const closeModeModal = () => {
         UI.hideModal(DOM.modeModalOverlay);
