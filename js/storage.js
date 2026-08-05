@@ -7,7 +7,7 @@ const STORAGE_KEY = 'wafer_driller_fleet_v5';
 const SETTINGS_KEY = 'wafer_driller_settings_v5';
 
 // Feature Flag for Multi-Device Cloud Sync
-export const CLOUD_SYNC_ENABLED = false;
+export const CLOUD_SYNC_ENABLED = true;
 
 let currentSyncStatus = CLOUD_SYNC_ENABLED ? 'SYNCING' : 'LOCAL';
 let syncTimer = null;
@@ -302,6 +302,62 @@ export const StorageService = {
     },
 
     async loadMachinesAsync() {
+        if (CLOUD_SYNC_ENABLED) {
+            try {
+                updateSyncStatus('SYNCING');
+                const res = await fetch('/api/machines');
+                if (res.ok) {
+                    const remote = await res.json();
+                    if (Array.isArray(remote) && remote.length > 0) {
+                        const normalized = this.normalizeMachines(remote);
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+                        lastMachinesHash = getMachinesHash(normalized);
+                        updateSyncStatus('SYNCED');
+                        return normalized;
+                    } else if (Array.isArray(remote) && remote.length === 0) {
+                        // Remote D1 is empty. Check if local data exists to seed D1.
+                        const localRaw = localStorage.getItem(STORAGE_KEY);
+                        let localMachines = [];
+                        if (localRaw) {
+                            try { localMachines = JSON.parse(localRaw); } catch (e) {}
+                        }
+                        if (!Array.isArray(localMachines) || localMachines.length === 0) {
+                            try {
+                                const fRes = await fetch('data/machines.json');
+                                if (fRes.ok) {
+                                    const json = await fRes.json();
+                                    if (Array.isArray(json) && json.length > 0) {
+                                        localMachines = json;
+                                    }
+                                }
+                            } catch (e) {}
+                        }
+                        if (!Array.isArray(localMachines) || localMachines.length === 0) {
+                            localMachines = getFallbackMachines();
+                        }
+
+                        const normalizedLocal = this.normalizeMachines(localMachines);
+                        try {
+                            await fetch('/api/sync/upload-local', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ machines: normalizedLocal, settings: this.loadSettings() })
+                            });
+                        } catch (uploadErr) {
+                            console.warn('[StorageService] D1 seed upload warning:', uploadErr);
+                        }
+                        localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizedLocal));
+                        lastMachinesHash = getMachinesHash(normalizedLocal);
+                        updateSyncStatus('SYNCED');
+                        return normalizedLocal;
+                    }
+                }
+            } catch (err) {
+                console.warn('[StorageService] Error connecting to Cloud API, using local storage:', err);
+                updateSyncStatus('OFFLINE');
+            }
+        }
+
         try {
             const raw = localStorage.getItem(STORAGE_KEY);
             if (raw !== null) {
@@ -310,7 +366,6 @@ export const StorageService = {
                     return this.normalizeMachines(parsed);
                 }
             }
-            // Fetch initial machines from data/machines.json if localStorage is empty
             const res = await fetch('data/machines.json');
             if (res.ok) {
                 const json = await res.json();
@@ -368,12 +423,28 @@ export const StorageService = {
     saveMachine(machineData) {
         const machines = this.loadMachines();
         const index = machines.findIndex(m => m.id === machineData.id);
+        const updatedTarget = { ...machineData, lastUpdated: new Date().toISOString() };
         if (index !== -1) {
-            machines[index] = { ...machines[index], ...machineData, lastUpdated: new Date().toISOString() };
+            machines[index] = { ...machines[index], ...updatedTarget };
         } else {
-            machines.push({ ...machineData, lastUpdated: new Date().toISOString() });
+            machines.push(updatedTarget);
         }
         this.saveMachines(machines);
+
+        if (CLOUD_SYNC_ENABLED) {
+            updateSyncStatus('SYNCING');
+            fetch('/api/machines', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedTarget)
+            }).then(res => {
+                if (res.ok) updateSyncStatus('SYNCED');
+                else updateSyncStatus('ERROR');
+            }).catch(err => {
+                updateSyncStatus('OFFLINE');
+            });
+        }
+
         return machines;
     },
 
@@ -381,6 +452,19 @@ export const StorageService = {
         let machines = this.loadMachines();
         machines = machines.filter(m => String(m.id) !== String(id));
         this.saveMachines(machines);
+
+        if (CLOUD_SYNC_ENABLED) {
+            updateSyncStatus('SYNCING');
+            fetch(`/api/machines/${id}`, { method: 'DELETE' })
+                .then(res => {
+                    if (res.ok) updateSyncStatus('SYNCED');
+                    else updateSyncStatus('ERROR');
+                })
+                .catch(err => {
+                    updateSyncStatus('OFFLINE');
+                });
+        }
+
         return machines;
     },
 
@@ -418,6 +502,14 @@ export const StorageService = {
             localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
         } catch (err) {
             console.error('[StorageService] Error saving settings:', err);
+        }
+
+        if (CLOUD_SYNC_ENABLED) {
+            fetch('/api/settings', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(settings)
+            }).catch(err => {});
         }
     },
 
