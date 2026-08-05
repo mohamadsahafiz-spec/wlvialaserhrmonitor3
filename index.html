@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0f172a">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Laser System">
+    <title>Laser Management System</title>
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+    <link rel="apple-touch-icon" href="icon.svg">
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Modular CSS Structure -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/cards.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+    <!-- =====================================================
+         HEADER / NAVIGATION TITLE BAR
+    ===================================================== -->
+    <header class="app-header">
+        <div class="header-content">
+            <div class="brand">
+                <div class="logo-box">
+                    <svg class="icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                </div>
+                <div>
+                    <h1>Laser Management System</h1>
+                    <div class="subtitle">Laser Lifetime & Hour Recalibration Engine • Version 1.0</div>
+                </div>
+            </div>
+
+            <nav class="nav-links">
+                <a href="#" id="nav-fleet" class="nav-item active">
+                    <svg class="icon nav-icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                    Fleet Overview
+                </a>
+                <a href="#" id="nav-settings" class="nav-item">
+                    <svg class="icon nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                    Settings
+                </a>
+            </nav>
+
+            <div class="header-controls">
+                <button id="btn-toggle-mode" class="user-profile-btn" title="Click to switch access mode">
+                    <div class="user-avatar avatar-engineer">E</div>
+                    <div class="user-info">
+                        <span id="mode-label" class="user-name">Engineer Admin</span>
+                        <span class="user-role-badge role-eng">Full Access</span>
+                    </div>
+                    <svg class="icon user-dropdown-icon" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
+                <button id="btn-theme" class="btn-icon theme-toggle-btn" title="Toggle Light/Dark Theme">
+                    <svg class="icon icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+                    <svg class="icon icon-moon hidden" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="app-container">
+
+        <!-- =====================================================
+             VIEW 1: FLEET OVERVIEW DASHBOARD
+        ===================================================== -->
+        <section id="view-fleet" class="fleet-view">
+
+            <!-- Laser Beam Animation Band -->
+            <div id="lms-beam-container" style="position:relative; width:100%; height:75px; overflow:hidden; margin-bottom:16px; background:transparent;">
+                <svg id="lms-beam-svg" style="position:absolute; inset:0; width:100%; height:100%; display:block;">
+                    <defs id="lms-beam-defs">
+                        <filter id="lms-blurGlow"><feGaussianBlur stdDeviation="6"/></filter>
+                    </defs>
+                </svg>
+            </div>
+
+            <!-- Fleet Statistics Summary Panel -->
+            <div id="fleet-stats-panel" class="dashboard-stats-grid glass-panel" style="margin-bottom: 20px;">
+                <div class="stat-box">
+                    <div class="stat-title">TOTAL MACHINES</div>
+                    <div id="stat-total-count" class="stat-value">--</div>
+                    <div class="stat-sub">Fleet Active</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">SAFE / OPTIMAL</div>
+                    <div id="stat-safe-count" class="stat-value color-safe">--</div>
+                    <div class="stat-sub">Normal Operation</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">WARNING STATUS</div>
+                    <div id="stat-warn-count" class="stat-value color-warning">--</div>
+                    <div class="stat-sub">&gt;80% Life Limit</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">ALARM STATUS</div>
+                    <div id="stat-alarm-count" class="stat-value color-alarm">--</div>
+                    <div class="stat-sub">Life Exceeded</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">FLEET AVG HEALTH</div>
+                    <div id="stat-avg-health" class="stat-value">--%</div>
+                    <div class="stat-sub">Remaining Life</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-title">TOTAL FLEET HOURS</div>
+                    <div id="stat-total-hours" class="stat-value">--</div>
+                    <div class="stat-sub">Accumulated Hours</div>
+                </div>
+            </div>
+
+            <div class="toolbar glass-panel">
+                <div class="sim-date-chip" title="Set simulated current evaluation date">
+                    <div class="sim-chip-icon">
+                        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    </div>
+                    <div class="sim-chip-body">
+                        <label for="todayDate" class="sim-chip-label">Simulated Date</label>
+                        <input type="date" id="todayDate" class="sim-chip-input">
+                    </div>
+                </div>
+
+                <div class="search-box">
+                    <svg class="icon search-icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    <input type="text" id="filter-search" class="input-control" placeholder="Search machine no, serial, or model...">
+                </div>
+                <div class="filter-group">
+                    <select id="filter-status" class="input-control">
+                        <option value="ALL">All Statuses</option>
+                        <option value="SAFE">SAFE Only</option>
+                        <option value="WARNING">WARNING Only</option>
+                        <option value="ALARM">ALARM Only</option>
+                    </select>
+                    <select id="filter-model" class="input-control">
+                        <option value="ALL">All Models</option>
+                        <option value="BMD302W">BMD302W</option>
+                        <option value="BMD250WM">BMD250WM</option>
+                    </select>
+                    <select id="filter-dept" class="input-control">
+                        <option value="ALL">All Departments</option>
+                        <option value="Wafer Prep">Wafer Prep</option>
+                        <option value="Packaging">Packaging</option>
+                        <option value="R&D">R&D</option>
+                    </select>
+                    <select id="filter-sort" class="input-control">
+                        <option value="no-asc">Sort: Machine No (A-Z)</option>
+                        <option value="no-desc">Sort: Machine No (Z-A)</option>
+                        <option value="hour-desc">Sort: Laser Hour (High to Low)</option>
+                        <option value="hour-asc">Sort: Laser Hour (Low to High)</option>
+                        <option value="remain-asc">Sort: Remaining Hours (Most Urgent)</option>
+                        <option value="remain-desc">Sort: Remaining Hours (Least Urgent)</option>
+                        <option value="health-asc">Sort: Health % (Lowest First)</option>
+                        <option value="health-desc">Sort: Health % (Highest First)</option>
+                        <option value="status-urgent">Sort: Status (ALARM -> SAFE)</option>
+                        <option value="recal-newest">Sort: Last Recalibrated (Newest)</option>
+                        <option value="recal-oldest">Sort: Last Recalibrated (Oldest)</option>
+                    </select>
+                    <button id="btn-open-add" class="btn btn-primary">
+                        <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        + Add Machine
+                    </button>
+                </div>
+            </div>
+
+            <!-- Fleet Machine Grid -->
+            <div id="fleet-grid" class="fleet-grid">
+                <!-- Dynamically populated by JS -->
+            </div>
+
+            <!-- Bottom Action Footer Bar for Reports & Export -->
+            <div class="fleet-footer-bar glass-panel">
+                <div class="footer-info">
+                    <svg class="icon" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>
+                    <span>Laser Lifetime & Hour Recalibration Engine • Fleet Overview Reports</span>
+                </div>
+                <div class="footer-actions">
+                    <button id="btn-export-csv" class="btn btn-secondary" title="Export CSV Report">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Export CSV
+                    </button>
+                    <button id="btn-print" class="btn btn-secondary" title="Print Report">
+                        <svg class="icon" viewBox="0 0 24 24"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+                        Print Report
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    <section id="view-single" class="single-view">
+            <div class="mach-modal-container glass-panel">
+                <!-- 1. Machine Header Bar -->
+                <div class="mach-modal-header">
+                    <div class="mach-header-left">
+                        <button id="btn-back" class="btn-back-pill">
+                            <svg class="icon" viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                            Fleet Overview
+                        </button>
+                        <div class="mach-title-block">
+                            <div class="mach-breadcrumb">Fleet Overview / <span id="mach-header-num">WD-101</span></div>
+                            <h2 id="mach-header-name">Wafer Driller #101</h2>
+                            <div id="mach-header-model" class="mach-sub-meta">BMD302W • SN: BMD3-9021</div>
+                        </div>
+                    </div>
+
+                    <div class="mach-header-right">
+                        <div class="sim-date-chip" title="Set simulated current evaluation date">
+                            <div class="sim-chip-icon">
+                                <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            </div>
+                            <div class="sim-chip-body">
+                                <label for="todayDate" class="sim-chip-label">Simulated Date</label>
+                                <input type="date" id="todayDate" class="sim-chip-input">
+                            </div>
+                        </div>
+                        <div id="mach-header-status" class="mc-status-badge color-safe">
+                            <div class="mc-led bg-safe led-solid"></div> SAFE
+                        </div>
+                        <button id="btn-close-mach-modal" class="mach-modal-close-btn" title="Close Workspace (ESC)">&times;</button>
+                    </div>
+                </div>
+
+                <!-- Tab Navigation Bar -->
+                <div class="mach-tabs-bar">
+                    <button class="mach-tab-btn active" data-tab="overview">
+                        <svg class="icon" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+                        Overview
+                    </button>
+                    <button class="mach-tab-btn" data-tab="health">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg>
+                        Health & Diode
+                    </button>
+                    <button class="mach-tab-btn" data-tab="calibration">
+                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                        Calibration
+                    </button>
+                    <button class="mach-tab-btn" data-tab="history">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                        Audit History
+                    </button>
+                    <button class="mach-tab-btn" data-tab="config">
+                        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                        Configuration
+                        <span class="tab-badge-lock">🔒</span>
+                    </button>
+                </div>
+
+                <!-- Tab Body Content Panes -->
+                <div class="mach-modal-body">
+                    <!-- TAB 1: OVERVIEW -->
+                    <div id="tab-overview" class="mach-tab-pane active">
+                        <!-- Warning Operational Banner (Shown during WARNING state) -->
+                        <div id="mach-warning-banner" class="recommendation-banner" style="display: none; margin-bottom: 20px; background: rgba(245, 158, 11, 0.12); border-color: var(--yellow); color: var(--yellow); padding: 14px 18px; font-weight: 700;">
+                            <svg class="icon" viewBox="0 0 24 24" style="width: 18px; height: 18px; stroke: currentColor; vertical-align: middle; margin-right: 8px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                            <span id="mach-warning-banner-text">REPLACEMENT PLANNING REQUIRED • RECOMMENDED LIFE LIMIT APPROACHING</span>
+                        </div>
+
+                        <!-- AUTOMATIC CONTINGENCY MODE PANEL (Revealed ONLY when Current Laser Hour >= Recommended Lifetime 25,000 hrs) -->
+                        <div id="contingency-mode-panel" class="contingency-panel glass-panel" style="display: none; margin-bottom: 24px; padding: 20px; border: 1px solid var(--red); background: rgba(239, 68, 68, 0.08); border-radius: 14px;">
+                            <div class="contingency-header" style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(239, 68, 68, 0.2); padding-bottom: 14px; margin-bottom: 16px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div class="mc-led bg-alarm led-solid" style="width: 12px; height: 12px; box-shadow: 0 0 12px var(--red);"></div>
+                                    <div>
+                                        <h3 style="margin: 0; color: var(--red); font-size: 17px; font-weight: 800; letter-spacing: 0.3px;">AUTOMATIC CONTINGENCY MODE</h3>
+                                        <div style="font-size: 13px; color: var(--text); font-weight: 700; margin-top: 2px;">RECOMMENDED LASER LIFE EXCEEDED</div>
+                                    </div>
+                                </div>
+                                <span class="badge badge-danger" style="font-size: 11px; padding: 5px 12px; background: rgba(239, 68, 68, 0.25); border: 1px solid var(--red); color: var(--red); font-weight: 800;">ALARM / CONTINGENCY</span>
+                            </div>
+
+                            <div class="contingency-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-bottom: 16px;">
+                                <div class="contingency-card" style="background: var(--input-bg); padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border);">
+                                    <div style="font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Recommended Life</div>
+                                    <div id="cm-recommended-life" style="font-size: 18px; font-weight: 800; color: var(--text); margin-top: 3px;">25,000 hrs</div>
+                                </div>
+                                <div class="contingency-card" style="background: var(--input-bg); padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border);">
+                                    <div style="font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Exceeded By</div>
+                                    <div id="cm-exceeded-by" style="font-size: 18px; font-weight: 800; color: var(--red); margin-top: 3px;">120 hrs</div>
+                                </div>
+                                <div class="contingency-card" style="background: var(--input-bg); padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border);">
+                                    <div style="font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Contingency Margin</div>
+                                    <div id="cm-margin-remaining" style="font-size: 18px; font-weight: 800; color: var(--yellow); margin-top: 3px;">2,880 hrs</div>
+                                </div>
+                                <div class="contingency-card" style="background: var(--input-bg); padding: 12px; border-radius: 10px; border: 1px solid var(--glass-border);">
+                                    <div style="font-size: 10px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">Contingency Ceiling</div>
+                                    <div id="cm-ceiling-val" style="font-size: 18px; font-weight: 800; color: var(--text); margin-top: 3px;">28,000 hrs</div>
+                                </div>
+                            </div>
+
+                            <div class="contingency-progress-box" style="margin-bottom: 14px;">
+                                <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; color: var(--muted); margin-bottom: 6px;">
+                                    <span>Contingency Margin Consumption (25,000 → 28,000 hrs Ceiling)</span>
+                                    <span id="cm-range-pct" style="color: var(--yellow);">4.2% Margin Used</span>
+                                </div>
+                                <div class="progress-track" style="height: 10px; background: rgba(255,255,255,0.08); border-radius: 6px; overflow: hidden;">
+                                    <div id="cm-progress-fill" class="progress-fill" style="width: 4.2%; background: linear-gradient(90deg, var(--yellow), var(--red)); height: 100%;"></div>
+                                </div>
+                            </div>
+
+                            <div class="contingency-notice-box" style="padding: 12px 16px; background: rgba(239, 68, 68, 0.12); border-left: 4px solid var(--red); border-radius: 6px; font-size: 13px; line-height: 1.5; color: #fca5a5;">
+                                <strong>Risk & Engineering Notice:</strong> Extended operation beyond recommended laser lifetime requires contingency planning and customer risk management.
+                            </div>
+                        </div>
+
+                        <!-- Primary KPI Dashboard Header & Cards (Mapped to Most Critical Laser) -->
+                        <div id="crit-laser-hero-bar" class="glass-panel" style="margin-bottom: 14px; padding: 12px 18px; border-radius: 12px; display: flex; align-items: center; justify-content: space-between; border-left: 4px solid var(--primary);">
+                            <div style="display: flex; align-items: center; gap: 12px;">
+                                <span class="badge badge-info" style="font-weight: 800; font-size: 11px; letter-spacing: 0.5px;">MOST CRITICAL LASER</span>
+                                <div style="font-size: 14px; font-weight: 700; color: var(--text);">
+                                    <span id="hero-crit-name">Laser Head 1</span>
+                                    <span id="hero-crit-serial" style="color: var(--muted); font-weight: 500; margin-left: 8px;">SN: --</span>
+                                </div>
+                            </div>
+                            <div id="hero-crit-status-badge" class="mc-status-badge color-safe" style="font-size: 12px;">
+                                <div id="hero-crit-status-led" class="mc-led bg-safe led-solid"></div>
+                                <span id="hero-crit-status-text">SAFE</span>
+                            </div>
+                        </div>
+
+                        <div class="mach-kpi-grid">
+                            <div class="mach-kpi-card glass-panel">
+                                <div class="kpi-header">
+                                    <span class="kpi-label">Current Laser Hour</span>
+                                    <div class="kpi-icon bg-blue"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg></div>
+                                </div>
+                                <div id="currentHour" class="kpi-value">0 hrs</div>
+                                <div id="currentAge" class="kpi-sub">0 Years • 0 Days</div>
+                            </div>
+
+                            <div id="remainingCard" class="mach-kpi-card glass-panel">
+                                <div class="kpi-header">
+                                    <span class="kpi-label">Remaining Hour</span>
+                                    <div style="display:flex; align-items:center; gap:6px;">
+                                        <span id="remainingText" class="kpi-status-tag color-safe">SAFE</span>
+                                        <div id="remainingDot" class="led bg-safe led-solid"></div>
+                                    </div>
+                                </div>
+                                <div id="remainingHour" class="kpi-value color-safe">0 hrs</div>
+                                <div id="remainingDay" class="kpi-sub">0 Days to WARNING</div>
+                            </div>
+
+                            <div class="mach-kpi-card glass-panel">
+                                <div class="kpi-header">
+                                    <span class="kpi-label">Life Remaining %</span>
+                                    <div class="kpi-icon bg-teal"><svg class="icon" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg></div>
+                                </div>
+                                <div id="healthPercent" class="kpi-value color-primary">0%</div>
+                                <div class="kpi-sub">Recommended Life Capacity</div>
+                            </div>
+
+                            <div class="mach-kpi-card glass-panel">
+                                <div class="kpi-header">
+                                    <span class="kpi-label">Estimated End-of-Life</span>
+                                    <div class="kpi-icon bg-purple"><svg class="icon" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg></div>
+                                </div>
+                                <div id="mach-eol-date" class="kpi-value" style="font-size:24px;">2028-01-01</div>
+                                <div class="kpi-sub">Target Replacement Window</div>
+                            </div>
+                        </div>
+
+                        <!-- Laser Heads Container Section -->
+                        <div class="laser-heads-section">
+                            <div class="laser-heads-header">
+                                <div>
+                                    <h3 class="section-heading" style="margin:0;">Laser Head Units Status</h3>
+                                    <p style="font-size:13px; color:var(--muted); margin-top:2px;">Individual diode heads configuration and life remaining breakdown</p>
+                                </div>
+                                <button id="btn-add-laser-head" class="btn btn-primary btn-sm">
+                                    <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    + Add Laser Head
+                                </button>
+                            </div>
+                            <div id="laser-heads-grid" class="laser-heads-grid">
+                                <!-- Populated dynamically by MachineController -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-health" class="mach-tab-pane">
+                        <div class="glass-panel mach-section-box">
+                            <h3 class="section-heading">Laser Diode Health & Lifetime Analytics</h3>
+                            <div class="health-tab-grid">
+                                <div class="health-stat-card">
+                                    <div class="hs-label">Health Percentage</div>
+                                    <div id="health-tab-percent" class="hs-value color-primary">50%</div>
+                                    <div class="hs-sub">Rated Capacity Remaining</div>
+                                </div>
+                                <div class="health-stat-card">
+                                    <div class="hs-label">Running Since Baseline</div>
+                                    <div id="runningHour" class="hs-value">0 hrs</div>
+                                    <div id="runningDay" class="hs-sub">0 Days</div>
+                                </div>
+                                <div class="health-stat-card">
+                                    <div class="hs-label">Accuracy Rating</div>
+                                    <div id="conf-accuracy-tab" class="hs-value" style="color:var(--green)">🟢 HIGH</div>
+                                    <div class="hs-sub">Meter Verification Level</div>
+                                </div>
+                            </div>
+
+                            
+                            <div class="progress-track" style="height:14px; margin: 24px 0 10px 0;">
+                                <div id="progressBar" class="progress-fill" style="width: 0%;"></div>
+                            </div>
+                            <div class="progress-scale">
+                                <span>0 hrs</span>
+                                <span id="scaleWarn">20,000 hrs (WARN)</span>
+                                <span id="scaleAlarm">25,000 hrs (ALARM)</span>
+                            </div>
+                            <div id="recommendation" class="recommendation-banner" style="margin-bottom: 24px;">
+                                Continue normal operation. Review during next preventive maintenance.
+                            </div>
+<div class="health-trend-card glass-panel" style="margin-top:20px; padding:20px;">
+                                <h4 style="font-size:15px; font-weight:700; margin-bottom:12px;">Operating Consumption Trajectory</h4>
+                                <p style="font-size:13px; color:var(--muted); margin-bottom:16px;">
+                                    Continuous laser diode degradation curve mapped against rated limits.
+                                </p>
+                                <div class="sparkline-bar-graphic">
+                                    <div class="spark-bar" style="height: 25%;"><span>Q1</span></div>
+                                    <div class="spark-bar" style="height: 38%;"><span>Q2</span></div>
+                                    <div class="spark-bar" style="height: 50%;"><span>Q3</span></div>
+                                    <div class="spark-bar active" style="height: 62%;"><span>Current</span></div>
+                                    <div class="spark-bar proj" style="height: 80%;"><span>80% Warn</span></div>
+                                    <div class="spark-bar limit" style="height: 100%;"><span>100% EOL</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 3: CALIBRATION -->
+                    <div id="tab-calibration" class="mach-tab-pane">
+                        <div class="glass-panel mach-section-box">
+                            <div class="section-title-row">
+                                <div>
+                                    <h3>Laser Hour Recalibration Center</h3>
+                                    <p class="section-desc">Physical meter baseline synchronization and accuracy calibration</p>
+                                </div>
+                                <button id="btn-open-recalibrate-2" class="btn btn-primary btn-sm">
+                                    <svg class="icon" viewBox="0 0 24 24"><path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path></svg>
+                                    Recalibrate Now
+                                </button>
+                            </div>
+
+                            <div class="confidence-kpi-grid" style="margin-top:20px;">
+                                <div class="conf-kpi-card">
+                                    <div class="conf-kpi-label">Estimated Laser Hour</div>
+                                    <div id="conf-estimated-hour" class="conf-kpi-val" style="color:var(--primary)">12,500 hrs</div>
+                                </div>
+                                <div class="conf-kpi-card">
+                                    <div class="conf-kpi-label">Recalibration Accuracy</div>
+                                    <div id="conf-accuracy-calib" class="conf-kpi-val" style="color:var(--green)">🟢 HIGH</div>
+                                </div>
+                                <div class="conf-kpi-card">
+                                    <div class="conf-kpi-label">Last Recalibrated</div>
+                                    <div id="conf-last-recal-2" class="conf-kpi-val">2026-06-28 00:00</div>
+                                </div>
+                                <div class="conf-kpi-card">
+                                    <div class="conf-kpi-label">Next Advisory</div>
+                                    <div id="conf-next-recal-2" class="conf-kpi-val">2026-07-28</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 4: HISTORY -->
+                    <div id="tab-history" class="mach-tab-pane">
+                        <!-- Calibration History Table -->
+                        <div class="glass-panel mach-section-box">
+                            <h3 class="section-heading">Calibration Audit Log</h3>
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Timestamp</th>
+                                            <th>Laser Head</th>
+                                            <th>Estimated Hr Before</th>
+                                            <th>Actual Meter Hr</th>
+                                            <th>Deviation</th>
+                                            <th>Reason</th>
+                                            <th>Rating</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="calibration-tbody">
+                                        <!-- Populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Maintenance History Table -->
+                        <div class="glass-panel mach-section-box" style="margin-top:20px;">
+                            <div class="section-title-row">
+                                <h3 class="section-heading">Maintenance & Service Log</h3>
+                                <button id="btn-add-record" class="btn btn-secondary btn-sm">
+                                    <svg class="icon" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                                    + Add Record
+                                </button>
+                            </div>
+                            <div class="table-wrap">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Engineer</th>
+                                            <th>Action Taken</th>
+                                            <th>Notes / Findings</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="maintenance-tbody">
+                                        <!-- Populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 5: CONFIGURATION (Engineer Mode Only) -->
+                    <div id="tab-config" class="mach-tab-pane">
+                        <div id="config-engineer-gate" class="glass-panel mach-section-box">
+                            <div class="section-title-row">
+                                <div>
+                                    <h3>Machine Configuration Parameters</h3>
+                                    <p class="section-desc">Editable identity parameters for machine routing and department tracking</p>
+                                </div>
+                                <span class="badge badge-engineer">Engineer Access Only</span>
+                            </div>
+
+                            <div class="machine-info-grid" style="margin-top:20px;">
+                                <div class="form-group" style="grid-column: 1 / -1;">
+                                    <label>Machine Name</label>
+                                    <input type="text" id="det-mach-name" class="input-control" placeholder="e.g. Wafer Driller BMD302W">
+                                </div>
+                                <div class="form-group">
+                                    <label>Machine No</label>
+                                    <input type="text" id="det-mach-no" class="input-control" value="WD-101">
+                                </div>
+                                <div class="form-group">
+                                    <label>Model</label>
+                                    <select id="det-model" class="input-control">
+                                        <option value="BMD302W">BMD302W</option>
+                                        <option value="BMD250WM">BMD250WM</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label>Serial Number</label>
+                                    <input type="text" id="det-serial-no" class="input-control" value="BMD3-9021">
+                                </div>
+                                <div class="form-group">
+                                    <label>Department</label>
+                                    <select id="det-dept" class="input-control">
+                                        <option value="Wafer Prep">Wafer Prep</option>
+                                        <option value="Packaging">Packaging</option>
+                                        <option value="R&D">R&D</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div style="margin-top:24px; display:flex; justify-content:flex-end; gap:12px;">
+                                <button id="btn-delete-machine" class="btn btn-secondary" style="background: rgba(239, 68, 68, 0.15); border-color: var(--red); color: var(--red);">
+                                    <svg class="icon" viewBox="0 0 24 24" style="stroke: var(--red)"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                                    Delete Machine
+                                </button>
+                                <button id="btn-save-machine" class="btn btn-primary">
+                                    <svg class="icon" viewBox="0 0 24 24"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                                    Save Configuration
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    <section id="view-settings" class="settings-view">
+            <div class="glass-panel panel-section">
+                <div class="panel-header">
+                    <h2>System Engine Configuration</h2>
+                    <span class="badge badge-info">v1.0 Modular Architecture</span>
+                </div>
+                <div class="form-grid" style="margin-top: 16px;">
+                    <div class="form-group">
+                        <label>Application Title</label>
+                        <input type="text" id="cfg-app-title" class="input-control" value="Laser Management System">
+                    </div>
+                    <div class="form-group">
+                        <label>Default Rated Laser Life (hrs)</label>
+                        <input type="number" id="cfg-rated-life" class="input-control" value="25000">
+                    </div>
+                    <div class="form-group">
+                        <label>Warning Limit Threshold (%)</label>
+                        <input type="number" id="cfg-warn-pct" class="input-control" value="80">
+                    </div>
+                    <div class="form-group">
+                        <label>Recalibration Interval Advisory (Days)</label>
+                        <input type="number" id="cfg-recal-interval" class="input-control" value="30">
+                    </div>
+                    <div class="form-group">
+                        <label>Engineer Mode Password</label>
+                        <input type="password" id="cfg-eng-password" class="input-control" value="1234">
+                    </div>
+                </div>
+                <div style="margin-top:20px; display:flex; gap:12px;">
+                    <button id="btn-save-settings" class="btn btn-primary">Save Settings</button>
+                    <button id="btn-reset-defaults" class="btn btn-secondary">Restore Defaults</button>
+                </div>
+            </div>
+
+            <div class="glass-panel panel-section" style="margin-top: 24px;">
+                <div class="panel-header">
+                    <h2>Fleet Data Backup & Synchronization</h2>
+                </div>
+                <p style="font-size:14px; color:var(--muted); margin-bottom: 16px;">
+                    Export all laser driller machine configurations, maintenance history, and calibration audit logs to a JSON file or import a backup.
+                </p>
+                <div style="display:flex; gap:12px; flex-wrap:wrap;">
+                    <button id="btn-export-json" class="btn btn-secondary">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                        Export Fleet Backup (.json)
+                    </button>
+                    <label class="btn btn-secondary" style="cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                        <svg class="icon" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+                        Import Fleet Backup (.json)
+                        <input type="file" id="input-import-json" accept=".json" style="display:none;">
+                    </label>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- =====================================================
+         MODAL: ADD MACHINE
+    ===================================================== -->
+    <div id="add-modal-overlay" class="modal-overlay">
+        <div class="modal-content glass-panel">
+            <div class="modal-header">
+                <h3>Add New Laser Driller Machine</h3>
+                <button id="btn-close-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Model</label>
+                        <select id="new-mach-model" class="input-control">
+                            <option value="BMD302W">BMD302W</option>
+                            <option value="BMD250WM">BMD250WM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Serial Number</label>
+                        <input type="text" id="new-mach-serial" class="input-control" placeholder="e.g. BMD3-9982">
+                    </div>
+                    <div class="form-group">
+                        <label>Department</label>
+                        <select id="new-mach-dept" class="input-control">
+                            <option value="Wafer Prep">Wafer Prep</option>
+                            <option value="Packaging">Packaging</option>
+                            <option value="R&D">R&D</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Laser Heads</label>
+                        <select id="new-mach-laser-count" class="input-control">
+                            <option value="1" selected>1 Head</option>
+                            <option value="2">2 Heads</option>
+                            <option value="3">3 Heads</option>
+                            <option value="4">4 Heads</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-cancel-modal" class="btn btn-secondary">Cancel</button>
+                <button id="btn-submit-machine" class="btn btn-primary">Add Machine</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         MODAL: EDIT MACHINE
+    ===================================================== -->
+    <div id="edit-modal-overlay" class="modal-overlay">
+        <div class="modal-content glass-panel" style="max-width:480px;">
+            <div class="modal-header">
+                <h3>Edit Laser Driller Machine Properties</h3>
+                <button id="btn-close-edit-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="edit-mach-id">
+                <div class="form-grid" style="grid-template-columns:1fr;">
+                    <div class="form-group">
+                        <label>Machine Name</label>
+                        <input type="text" id="edit-mach-name" class="input-control" placeholder="e.g. Wafer Driller BMD302W">
+                    </div>
+                    <div class="form-group">
+                        <label>Machine No</label>
+                        <input type="text" id="edit-mach-no" class="input-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Model</label>
+                        <select id="edit-mach-model" class="input-control">
+                            <option value="BMD302W">BMD302W</option>
+                            <option value="BMD250WM">BMD250WM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Serial Number</label>
+                        <input type="text" id="edit-mach-serial" class="input-control">
+                    </div>
+                    <div class="form-group">
+                        <label>Department</label>
+                        <select id="edit-mach-dept" class="input-control">
+                            <option value="Wafer Prep">Wafer Prep</option>
+                            <option value="Packaging">Packaging</option>
+                            <option value="R&D">R&D</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer" style="display:flex; justify-content:space-between; width:100%;">
+                <button id="btn-delete-edit-machine" class="btn btn-secondary" style="background: rgba(239, 68, 68, 0.15); border-color: var(--red); color: var(--red);">
+                    <svg class="icon" viewBox="0 0 24 24" style="stroke: var(--red)"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                    Delete Machine
+                </button>
+                <div style="display:flex; gap:8px;">
+                    <button id="btn-cancel-edit-modal" class="btn btn-secondary">Cancel</button>
+                    <button id="btn-submit-edit-machine" class="btn btn-primary">Save Machine</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         MODAL: IDENTITY MISMATCH WARNING
+    ===================================================== -->
+    <div id="identity-mismatch-modal-overlay" class="modal-overlay">
+        <div class="modal-content glass-panel" style="max-width:480px;">
+            <div class="modal-header">
+                <h3>Identity Mismatch Warning</h3>
+                <button id="btn-close-identity-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="recommendation-banner" style="background:rgba(251,191,36,0.15); border-color:var(--yellow); color:var(--yellow); margin-bottom:16px;">
+                    <strong>Warning:</strong> Entered machine identity differs from registered parent machine identity.
+                </div>
+                <div style="background:var(--input-bg); border:1px solid var(--panel-border); border-radius:8px; padding:14px; font-size:13px; line-height:1.6; margin-bottom:16px;">
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        <div>
+                            <span style="color:var(--muted); font-size:11px; text-transform:uppercase; display:block;">Registered Model</span>
+                            <strong id="mismatch-reg-model" style="color:var(--text);">--</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--muted); font-size:11px; text-transform:uppercase; display:block;">Entered Model</span>
+                            <strong id="mismatch-ent-model" style="color:var(--primary);">--</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--muted); font-size:11px; text-transform:uppercase; display:block;">Registered Serial</span>
+                            <strong id="mismatch-reg-serial" style="color:var(--text);">--</strong>
+                        </div>
+                        <div>
+                            <span style="color:var(--muted); font-size:11px; text-transform:uppercase; display:block;">Entered Serial</span>
+                            <strong id="mismatch-ent-serial" style="color:var(--primary);">--</strong>
+                        </div>
+                    </div>
+                </div>
+                <p style="font-size:13px; color:var(--muted); margin:0;">
+                    Would you like to use the registered identity or explicitly confirm identity change?
+                </p>
+            </div>
+            <div class="modal-footer" style="gap:10px;">
+                <button id="btn-use-registered-identity" class="btn btn-secondary">Use Registered Data</button>
+                <button id="btn-confirm-identity-change" class="btn btn-primary">Confirm Identity Change</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         MODAL: ENGINEER MODE AUTHENTICATION
+    ===================================================== -->
+    <div id="mode-modal-overlay" class="modal-overlay">
+        <div class="modal-content glass-panel" style="max-width:420px;">
+            <div class="modal-header">
+                <h3 id="mode-modal-title">Engineer Access Authentication</h3>
+                <button id="btn-close-mode-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:14px; color:var(--muted);" id="mode-modal-desc">
+                    Please enter the Engineer Password to unlock full configuration, recalibration, and editing access.
+                </p>
+                <div class="form-group" style="margin-top:14px;">
+                    <label>Engineer Password</label>
+                    <input type="password" id="input-mode-password" class="input-control" placeholder="Enter password (default: 1234)">
+                    <div id="mode-password-error" style="color:var(--red); font-size:13px; margin-top:6px; display:none;">
+                        Incorrect password. Please try again.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-cancel-mode-modal" class="btn btn-secondary">Cancel</button>
+                <button id="btn-submit-mode-auth" class="btn btn-primary">Unlock Engineer Mode</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         MODAL: RECALIBRATE LASER HOUR
+    ===================================================== -->
+    <div id="recalibrate-modal-overlay" class="modal-overlay">
+        <div class="modal-content glass-panel" style="max-width:480px;">
+            <div class="modal-header">
+                <h3>Laser Hour Recalibration</h3>
+                <button id="btn-close-recal-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:13px; color:var(--muted); margin-bottom:14px;">
+                    Calibrate the physical hour meter reading for the selected laser head unit to align estimated decay tracking.
+                </p>
+                <div class="form-grid" style="grid-template-columns:1fr;">
+                    <div class="form-group">
+                        <label>Select Laser Head</label>
+                        <select id="recal-laser-select" class="input-control">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Current Estimated Hour</label>
+                        <input type="text" id="recal-current-est" class="input-control" readonly style="background:var(--input-bg); color:var(--primary); font-weight:700;">
+                    </div>
+                    <div class="form-group">
+                        <label>Actual Physical Hour Reading (hrs)</label>
+                        <input type="number" id="recal-actual-hour" class="input-control" placeholder="Enter actual meter reading e.g. 12500">
+                    </div>
+                    <div class="form-group">
+                        <label>Recalibration Reason / Context</label>
+                        <select id="recal-reason" class="input-control">
+                            <option value="Manual Verification">Manual Audit Verification</option>
+                            <option value="Diode Maintenance">Laser Diode Maintenance</option>
+                            <option value="Meter Sync">Hour Meter Synchronization</option>
+                            <option value="Preventive Maintenance">Preventive Maintenance (PM)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-cancel-recal-modal" class="btn btn-secondary">Cancel</button>
+                <button id="btn-submit-recalibrate" class="btn btn-primary">Calculate Deviation & Apply</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         MODAL: DEVIATION ANALYSIS & CONFIRMATION
+    ===================================================== -->
+    <div id="deviation-modal-overlay" class="modal-overlay">
+        <div class="modal-content glass-panel" style="max-width:520px;">
+            <div class="modal-header">
+                <h3>Recalibration Deviation Analysis</h3>
+                <button id="btn-close-dev-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="confidence-kpi-grid" style="grid-template-columns: 1fr 1fr; gap:12px; margin-bottom:16px;">
+                    <div class="conf-kpi-card">
+                        <div class="conf-kpi-label">Estimated Hour</div>
+                        <div id="dev-est-hour" class="conf-kpi-val">-- hrs</div>
+                    </div>
+                    <div class="conf-kpi-card">
+                        <div class="conf-kpi-label">Actual Meter Hour</div>
+                        <div id="dev-actual-hour" class="conf-kpi-val" style="color:var(--primary)">-- hrs</div>
+                    </div>
+                    <div class="conf-kpi-card">
+                        <div class="conf-kpi-label">Deviation Difference</div>
+                        <div id="dev-diff" class="conf-kpi-val">-- hrs</div>
+                    </div>
+                    <div class="conf-kpi-card">
+                        <div class="conf-kpi-label">Accuracy Rating</div>
+                        <div id="dev-rating" class="conf-kpi-val">--</div>
+                    </div>
+                </div>
+                <div id="dev-warning-box" class="recommendation-banner" style="display:none; margin-bottom:14px; background:rgba(239,68,68,0.15); border-color:var(--red); color:var(--red);">
+                    Warning: High deviation detected. Baseline will be resynchronized to actual meter hours.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-back-dev-modal" class="btn btn-secondary">Back</button>
+                <button id="btn-confirm-deviation" class="btn btn-primary">Confirm & Save Baseline</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         MODAL: ADD / EDIT LASER HEAD
+    ===================================================== -->
+    <div id="laser-modal-overlay" class="modal-overlay">
+        <div class="modal-content glass-panel" style="max-width:520px;">
+            <div class="modal-header">
+                <h3 id="laser-modal-title">Laser Head Unit Configuration</h3>
+                <button id="btn-close-laser-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="laser-modal-id">
+                <div class="form-grid" style="grid-template-columns:1fr 1fr; gap: 14px;">
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Laser Head Name / Label</label>
+                        <input type="text" id="laser-modal-name" class="input-control" placeholder="e.g. Laser Head #2 (Auxiliary)">
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Laser Head Serial Number</label>
+                        <input type="text" id="laser-modal-serial" class="input-control" placeholder="e.g. BMD3-9021-L2">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Captured Laser Hour (hrs)</label>
+                        <input type="number" id="laser-modal-base-hour" class="input-control" value="0" step="0.1">
+                        <div style="font-size:11px; color:var(--muted); margin-top:4px;">Hour-meter reading recorded at captured date/time.</div>
+                    </div>
+                    <div class="form-group">
+                        <label>Captured Date & Time</label>
+                        <input type="datetime-local" id="laser-modal-timestamp" class="input-control">
+                        <div style="font-size:11px; color:var(--muted); margin-top:4px;">Reference point for automatic estimation.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Warning Threshold (hrs)</label>
+                        <input type="number" id="laser-modal-warning" class="input-control" value="20000">
+                    </div>
+                    <div class="form-group">
+                        <label>Recommended Life Limit (hrs)</label>
+                        <input type="number" id="laser-modal-rated" class="input-control" value="25000">
+                    </div>
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label>Contingency Ceiling (hrs)</label>
+                        <input type="number" id="laser-modal-contingency" class="input-control" value="28000">
+                    </div>
+
+                    <!-- Calculated Preview Box -->
+                    <div class="form-group" style="grid-column: 1 / -1; margin-top: 4px;">
+                        <div id="laser-modal-preview" style="padding: 12px 14px; background: rgba(59, 130, 246, 0.1); border: 1px solid var(--primary); border-radius: 8px; font-size: 13px; color: var(--text); font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                            <svg class="icon" viewBox="0 0 24 24" style="width:16px;height:16px;stroke:var(--primary);flex-shrink:0;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <span id="laser-modal-preview-text">Estimated now: -- hrs (0.0 days elapsed)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-cancel-laser-modal" class="btn btn-secondary">Cancel</button>
+                <button id="btn-submit-laser-head" class="btn btn-primary">Save Laser Head</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         MODAL: DELETE LASER HEAD CONFIRMATION
+    ===================================================== -->
+    <div id="delete-laser-modal-overlay" class="modal-overlay">
+        <div class="modal-content glass-panel" style="max-width:440px;">
+            <div class="modal-header">
+                <h3>DELETE LASER HEAD?</h3>
+                <button id="btn-close-delete-laser-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:14px; color:var(--text); margin-bottom:12px;">
+                    You are about to remove:
+                </p>
+                <div style="padding:12px 16px; background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); border-radius:8px; margin-bottom:14px;">
+                    <div id="delete-laser-target-name" style="font-weight:700; font-size:15px; color:var(--red);">Laser Head #2</div>
+                    <div id="delete-laser-target-serial" style="font-size:12px; color:var(--muted); margin-top:2px;">SN: MC23006</div>
+                </div>
+                <p style="font-size:13px; color:var(--muted); line-height:1.4;">
+                    This action removes this laser configuration and its associated local monitoring history.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-cancel-delete-laser-modal" class="btn btn-secondary">Cancel</button>
+                <button id="btn-confirm-delete-laser" class="btn btn-danger" style="background:var(--red); border-color:var(--red); color:#fff; font-weight:700;">Delete Laser</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- =====================================================
+         MODAL: DELETE MACHINE CONFIRMATION
+    ===================================================== -->
+    <div id="delete-machine-modal-overlay" class="modal-overlay">
+        <div class="modal-content glass-panel" style="max-width:440px;">
+            <div class="modal-header">
+                <h3>DELETE MACHINE?</h3>
+                <button id="btn-close-delete-machine-modal" class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p style="font-size:14px; color:var(--text); margin-bottom:12px;">
+                    Are you sure you want to delete this machine?
+                </p>
+                <div style="padding:12px 16px; background:rgba(239, 68, 68, 0.1); border:1px solid rgba(239, 68, 68, 0.3); border-radius:8px; margin-bottom:14px;">
+                    <div id="delete-machine-target-name" style="font-weight:700; font-size:15px; color:var(--red);">WD-101</div>
+                    <div id="delete-machine-target-serial" style="font-size:12px; color:var(--muted); margin-top:2px;">SN: BMD3-9021</div>
+                </div>
+                <p style="font-size:13px; color:var(--muted); line-height:1.4;">
+                    This action cannot be undone. All configuration and calibration data will be permanently removed.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-cancel-delete-machine-modal" class="btn btn-secondary">Cancel</button>
+                <button id="btn-confirm-delete-machine-modal" class="btn btn-danger" style="background:var(--red); border-color:var(--red); color:#fff; font-weight:700;">Delete Machine</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Laser Beam Animation Script -->
+    <script src="js/beam-animation.js"></script>
+    <!-- ES6 Application Script -->
+    <script type="module" src="js/app.js"></script>
+</body>
+</html>
