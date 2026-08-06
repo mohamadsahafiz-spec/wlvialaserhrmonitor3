@@ -1,6 +1,8 @@
 {
-  "name": "Field Service Operations System",
-  "description": "Enterprise Field Service Operations System (FSOS v0.8.0 Mission Workspace) with Work-Adaptive Workspace Modes, cleanroom login session management, Machine Health Check, Machine Passport, and Executive Engineering Reports.",
+  "name": "Laser Management System",
+  "description": "Laser Management System Version 1.0 - SCADA operating hour tracking, lifetime estimation, and recalibration management system.",
   "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
 }
